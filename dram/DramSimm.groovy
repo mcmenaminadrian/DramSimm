@@ -66,12 +66,8 @@ class MainDramSim {
 
 	def current_cpu_time
 	def max_cpu_time
-	def cpu_frequency
-	def dram_type			/* dram type {sdram|ddrsdram|drdram|ddr2} */
-	def dram_frequency
-	def memory_frequency
-	def channel_count                    /* total number of logical channels */
-	def channel_width                      /* logical channel width in bytes */
+	
+	
 	def strict_ordering_flag
 	def refresh_interval                   /* in milliseconds */
 
@@ -108,6 +104,7 @@ class MainDramSim {
 	def bank_conflict_stats = false
 	def cas_per_ras_stats = false
 	def slot_id
+	def globalBiu
 
 	def average_interarrival_cycle_count               /* every X cycles, a transaction arrives */
 	def arrival_thresh_hold                            /* if drand48() exceed this thresh_hold. */
@@ -121,7 +118,7 @@ class MainDramSim {
 	def power_filein = null
 	def spd_fileptr
 	def power_fileptr
-	def access_distribution = [] /* used to set distribution percentages of access types */
+	def access_distribution /* used to set distribution percentages of access types */
 	def num_trace = 0
 	def transaction_total = 0
 	def transaction_retd_total = 0
@@ -131,54 +128,53 @@ class MainDramSim {
 	def i
 	/* set defaults */
 	
-	def max_inst			= 1000000	/* actually "cycle count" in this tester */
-	def cpu_frequency 			= 1000
-	def dram_type 			= SDRAM
-	def dram_frequency 			= 100
-	def memory_frequency 			= 100
-	def channel_count 			= 1
-	def channel_width 			= 8	/* bytes */
-	def refresh_interval 		= -1 //Ohm: change this from -1 to 0
-	def chipset_delay			= 10	/* DRAM ticks */
-	def bus_queue_depth			= 32
-	def row_buffer_management_policy 	= MEM_STATE_INVALID
-	def chipset_delay                   = 10	/* DRAM ticks */
-	def biu_delay                       = 10	/* CPU ticks */
-	def address_mapping_policy 		= SDRAM_BASE_MAP
-	def refresh_issue_policy = REFRESH_HIGHEST_PRIORITY
-	def strict_ordering_flag  		= false
-	def biu_debug_flag 			= false
-	def transaction_debug_flag		= false
-	def dram_debug_flag			= false
-	def trace_input_flag  		= false
-	def all_debug_flag     		= false
-	def wave_debug_flag  		= false
-	def cas_wave_debug_flag  		= false
-	def bundle_debug_flag  		= false
-	def amb_buffer_debug_flag	= false
-	def average_interarrival_cycle_count= 10.0	/* every 10 cycles, inject a new memory request */
-	def arrival_distribution_model = UNIFORM_DISTRIBUTION
-	def debug_tran_id_threshold		= 0
-	def debug_tran_id		= 0
-	def debug_ref_tran_id		= 0
-	spd_filein			= '\0'
-	def argc_index = 1
-
-	// in the below scheme, all access types have equal probability
-	access_distribution[0] = 0.20
-	access_distribution[1] = 0.40
-	access_distribution[2] = 0.60
-	access_distribution[3] = 0.80
-
+	MainDramSim()
+	{
 	
+		max_inst			= 1000000	/* actually "cycle count" in this tester */
+		cpu_frequency 			= 1000
+		/* dram type {sdram|ddrsdram|drdram|ddr2} */
+		dram_type 			= SDRAM
+		dram_frequency 			= 100
+		memory_frequency 			= 100
+		/* channel_count: total number of logical channels */
+		/* channel_width: logical channel width in bytes */
+		channel_count 			= 1
+		channel_width 			= 8	/* bytes */
+		refresh_interval 		= -1 //Ohm: change this from -1 to 0
+		bus_queue_depth			= 32
+		row_buffer_management_policy 	= MEM_STATE_INVALID
+		chipset_delay                   = 10	/* DRAM ticks */
+		biu_delay                       = 10	/* CPU ticks */
+		address_mapping_policy 		= SDRAM_BASE_MAP
+		refresh_issue_policy = REFRESH_HIGHEST_PRIORITY
+		strict_ordering_flag  		= false
+		biu_debug_flag 			= false
+		transaction_debug_flag		= false
+		dram_debug_flag			= false
+		trace_input_flag  		= false
+		all_debug_flag     		= false
+		wave_debug_flag  		= false
+		cas_wave_debug_flag  		= false
+		bundle_debug_flag  		= false
+		amb_buffer_debug_flag	= false
+		average_interarrival_cycle_count= 10.0	/* every 10 cycles, inject a new memory request */
+		arrival_distribution_model = UNIFORM_DISTRIBUTION
+		debug_tran_id_threshold		= 0
+		debug_tran_id		= 0
+		debug_ref_tran_id		= 0
+		spd_filein			= new String('\0')
+		argc_index = 1
 
-	/* Now init variables */
-	Biu globalBiu = new Biu()
-	globalBiu.set_biu_depth§(bus_queue_depth)
+		// in the below scheme, all access types have equal probability
+		access_distribution = [0.2, 0.4, 0.6, 0.8]
 
-	/* After handling all that, now override default numbers */
-	set_cpu_frequency(global_biu, cpu_frequency);				/* input value in MHz */
-	init_dram_system();
+		Biu globalBiu = new Biu()
+		globalBiu.set_biu_depth(bus_queue_depth)
+
+		/* After handling all that, now override default numbers */
+		globalBiu.set_cpu_frequency(cpu_frequency);				/* input value in MHz */
+		init_dram_system();
 	biu_set_mem_cfg(global_biu,get_dram_system_config());
 	set_dram_type(dram_type);					/* SDRAM, DDRSDRAM,  */
 	set_dram_frequency(dram_frequency);                             /* units in MHz */

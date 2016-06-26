@@ -171,13 +171,13 @@ def last_bank_id
 def last_rank_id
 def last_transaction_type
 def last_transaction_time
-static def global_biu
+//static def global_biu
 
 //void init_biu(biu_t *);
 
 Biu(){
 	
-	global_biu = this
+//	global_biu = this
 	current_cpu_time = 0
 	bus_queue_depth = 0
 	for (i in 0 .. MAX_BUS_QUEUE_DEPTH) {
@@ -199,11 +199,11 @@ Biu(){
 }
 
 static Biu get_biu_address(){
-	return global_biu
+	return this //global_biu
 }
 
 void set_biu_address(){
-	global_biu = this
+	//global_biu = this
 }
 
 
