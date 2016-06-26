@@ -174,7 +174,8 @@ class MainDramSim {
 
 		/* After handling all that, now override default numbers */
 		globalBiu.set_cpu_frequency(cpu_frequency);				/* input value in MHz */
-		init_dram_system();
+		
+		DramSystem dramSystem = new DramSyatem(globalBiu)
 	biu_set_mem_cfg(global_biu,get_dram_system_config());
 	set_dram_type(dram_type);					/* SDRAM, DDRSDRAM,  */
 	set_dram_frequency(dram_frequency);                             /* units in MHz */

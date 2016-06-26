@@ -88,15 +88,43 @@ class DramSystem {
 
 	def    cas_with_prec // For close page systems this will be used
 
-	//class?
+	
 	DramPower dram_power_config
 	 // power_config_t dram_power_config	/* Power Configuration */
 
 
 	
-	DramSystem()
+	DramSystem(Biu globalBiu)
 	{
+		setDramType(SDRAM)
+		setDramFrequency(100)
+		setMemoryFrequency(100)
+		setDramChannelCount(1)
+		setDramChannelWidth(8)
+		setPaMappingPolicy(SDRAM_BASE_MAP)
+		setDramTransactionGranularity(64)
+		setDramRowBufferManagementPolicy(OPEN_PAGE)
 		
+		strict_ordering_flag - false
+		packet_count = max(1, cacheline_size/channel_width)
+		auto_refresh_enabled = true
+		refresh_policy = REFRESH_ONE_CHAN_ONE_RANK_ALL_BANK
+		refresh_issue_policy = REFRESH_OPPORTUNISTIC
+		refresh_time = 100
+		refresh_cycle_count = 10000
+		dram_debug = false
+		wave_debug = false
+		wave_cas_debug = false
+		issue_debug = false
+		memory2dram_freq_ratio = 1
+		
+		arrival_threshold = 1500
+		data_cmd_count = max(1, cacheline_size/DATA_BYTES_PER_WRITE_BUNDLE)
+		drive_cmd_count = 1
+		num_thread_sets = 1
+		thread_sets[0] = 32
+		max_tq_size = MAX_TRANACTION_QUEUE_DEPTH
+		single_rank = true
 	
 	}
 }
